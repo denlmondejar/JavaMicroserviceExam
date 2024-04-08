@@ -1,4 +1,4 @@
-package com.javaexam.microservices.application;
+package com.mondejar.microservices.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
