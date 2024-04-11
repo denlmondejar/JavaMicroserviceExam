@@ -51,4 +51,12 @@ public class MicroservicesControllerAdvice {
 		return new ResponseEntity<>(new FailedResponsePayload(HttpStatus.BAD_REQUEST.value(), errorMessages), 
 				HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(CustomerAccountNotFoundException.class)
+	public ResponseEntity<FailedResponsePayload> handleCustomerAccountNotFoundException(CustomerAccountNotFoundException exception) {
+		logger.warn(exception.getMessage());
+		
+		return new ResponseEntity<>(new FailedResponsePayload(HttpStatus.NOT_FOUND.value(), exception.getLocalizedMessage()), 
+				HttpStatus.NOT_FOUND);
+	}
 }

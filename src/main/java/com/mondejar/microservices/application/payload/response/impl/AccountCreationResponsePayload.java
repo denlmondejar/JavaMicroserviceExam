@@ -7,6 +7,8 @@ public class AccountCreationResponsePayload implements IResponsePayload{
 	private Long customerNumber;
 	private Integer transactionStatusCode;
 	private String transactionStatusDescription;
+	
+	public AccountCreationResponsePayload() {}
 
 	public AccountCreationResponsePayload(Long customerNumber, Integer transactionStatusCode,
 			String transactionStatusDescription) {

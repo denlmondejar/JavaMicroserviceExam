@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.mondejar.microservices.application.entity.AccountDetails;
 import com.mondejar.microservices.application.entity.Customer;
 import com.mondejar.microservices.application.payload.request.impl.AccountCreationRequestPayload;
 import com.mondejar.microservices.application.payload.response.impl.AccountCreationResponsePayload;
+import com.mondejar.microservices.application.repository.IAccountDetailsRepository;
 import com.mondejar.microservices.application.repository.ICustomerRepository;
 import com.mondejar.microservices.application.service.ICustomerService;
 
@@ -24,7 +26,10 @@ public class AccountCreationService implements ICustomerService {
 	@Autowired
 	private ICustomerRepository customerRepository;
 	
+	@Autowired IAccountDetailsRepository accountDetailsRepository;
+	
 	private Customer customer;
+	private AccountDetails accountDetails;
 	
 	public ResponseEntity<AccountCreationResponsePayload> getResponse(@Valid @RequestBody AccountCreationRequestPayload requestPayload) {
 		customer = new Customer();
@@ -35,7 +40,15 @@ public class AccountCreationService implements ICustomerService {
 		customer.setAddress2(requestPayload.getAddress2());
 		customer.setAccountType(requestPayload.getAccountType().getValue());
 		
-		customerRepository.save(customer);
+		Customer savedCustomer = customerRepository.save(customer);
+		
+		accountDetails = new AccountDetails();
+		accountDetails.setCustomerNumber(savedCustomer.getCustomerNumber());
+		accountDetails.setAccountNumber(requestPayload.getAccountNumber());
+		accountDetails.setAccountType(savedCustomer.getAccountType());
+		accountDetails.setAvailableBalance(requestPayload.getAvailableBalance());
+		
+		accountDetailsRepository.save(accountDetails);
 		
 		return new ResponseEntity<>(new AccountCreationResponsePayload(customer.getCustomerNumber(), 
 				HttpStatus.CREATED.value(), CUSTOMER_ACCOUNT_CREATED), HttpStatus.CREATED);
